@@ -34,18 +34,19 @@ MTKSection InitSection(uint32_t size, uint32_t fileNameLenth)
 
 void MTKWriter::writeHeader(std::vector<uint8_t>& buf, MTKHeader& header)
 {
-	uint8_t* ptr = (uint8_t*)&header;
+	uint8_t* ptr = reinterpret_cast<uint8_t*>(&header);
+
 	buf.insert(buf.begin(), ptr, ptr + sizeof(header));
 }
 
 void MTKWriter::writeSection(std::vector<uint8_t>& buf, MTKSection& section)
 {
-	uint8_t* ptr = (uint8_t*)&section;
+	uint8_t* ptr = reinterpret_cast<uint8_t*>(&section);
 	buf.insert(buf.end(), ptr, ptr + sizeof(section));
 }
 
 void MTKWriter::writeData(std::vector<uint8_t>& buf, std::vector<uint8_t>& data)
 {
-	uint8_t* ptr = (uint8_t*)&data;
+	uint8_t* ptr = reinterpret_cast<uint8_t*>(&data);
 	buf.insert(buf.end(), ptr, ptr + sizeof(data));
 }
