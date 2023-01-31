@@ -35,7 +35,6 @@ MTKSection InitSection(uint32_t size, uint32_t fileNameLenth)
 void MTKWriter::writeHeader(std::vector<uint8_t>& buf, MTKHeader& header)
 {
 	uint8_t* ptr = reinterpret_cast<uint8_t*>(&header);
-
 	buf.insert(buf.begin(), ptr, ptr + sizeof(header));
 }
 
