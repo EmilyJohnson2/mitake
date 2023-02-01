@@ -44,7 +44,7 @@ void MITAKE::initHeader(Header& header, const std::vector<Point>& points, std::v
 {
 	header.magic  = MAGIC;
 	header.size   = static_cast<uint32_t>(points.size() * sizeof(Point) + sizeof(Header));
-	header.tags	  =	static_cast<uint32_t>(points.size());
+	header.tags   = static_cast<uint32_t>(points.size());
 	header.verson = VERSION;
 	*header.hash  = *reinterpret_cast<uint8_t*>(&hash);
 	/*
