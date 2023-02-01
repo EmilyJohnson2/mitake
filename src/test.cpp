@@ -6,7 +6,7 @@ int main(int argc, char* argv[])
 {
 	MITAKE mtk;
 	Header header;
-	Point p { 171, 2203, 114 };
+	Point p { 171, 2213, 114 };
 	std::vector<uint8_t> data;
 	std::vector<Point> points { 32, p };
 
