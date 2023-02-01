@@ -38,7 +38,7 @@ struct Point
 	uint32_t y;
 };
 
-class MITAKE
+class Mitake
 {
 	public:
 		void writePoint(std::vector<uint8_t>& data, const Point& point);
