@@ -43,8 +43,8 @@ void MITAKE::writePoints(std::vector<uint8_t>& data, const std::vector<Point>& p
 void MITAKE::initHeader(Header& header, const std::vector<Point>& points, std::vector<uint8_t>& hash)
 {
 	header.magic  = MAGIC;
-	header.size   = points.size() * sizeof(Point) + sizeof(Header);
-	header.tags   = points.size();
+	header.size   = static_cast<uint32_t>(points.size() * sizeof(Point) + sizeof(Header));
+	header.tags	  =	static_cast<uint32_t>(points.size());
 	header.verson = VERSION;
 	*header.hash  = *reinterpret_cast<uint8_t*>(&hash);
 	/*
