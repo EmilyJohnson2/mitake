@@ -26,14 +26,9 @@ std::vector<uint8_t> MITAKE::getHash(const std::vector<uint8_t>& data)
 
 void MITAKE::writePoint(std::vector<uint8_t>& data, const Point& point)
 {
-	std::vector<uint8_t> buf;
-	buf.emplace_back(point.tag);
-	buf.emplace_back(point.x);
-	buf.emplace_back(point.y);
-
-	for (uint32_t i = 0; i < buf.size(); ++i) {
-		data.insert(data.end(), buf[i]);
-	}
+	data.emplace_back(point.tag);
+	data.emplace_back(point.x);
+	data.emplace_back(point.y);
 }
 
 void MITAKE::writePoints(std::vector<uint8_t>& data, const std::vector<Point>& points)
@@ -42,5 +37,17 @@ void MITAKE::writePoints(std::vector<uint8_t>& data, const std::vector<Point>& p
 		data.emplace_back(points[i].tag);
 		data.emplace_back(points[i].x);
 		data.emplace_back(points[i].y);
+	}
+}
+
+void MITAKE::initHeader(Header& header, const std::vector<Point>& points, std::vector<uint8_t>& hash)
+{
+	header.magic  = MAGIC;
+	header.size   = points.size() * sizeof(Point) + sizeof(Header);
+	header.tags   = points.size();
+	header.verson = VERSION;
+
+	for (uint32_t i = 0; i < 32; ++i) {
+		memcpy(header.hash, &hash[i], 1);
 	}
 }
