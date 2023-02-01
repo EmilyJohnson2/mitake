@@ -20,7 +20,15 @@
 
 int main(int argc, char* argv[])
 {
-	
+	std::vector<uint8_t> data;
+	Point p {4220141, 2521342, 123152};
+	MITAKE mtk;
+	mtk.writePoint(data, p);
+
+	for (auto i = 0; i < data.size(); ++i)
+	{
+		std::cout << data[i];
+	}
 
 	return 0;
 }

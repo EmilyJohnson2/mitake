@@ -38,4 +38,10 @@ struct Point
 	uint32_t y;
 };
 
-std::vector<uint8_t> getHash(const std::vector<uint8_t>& data);
+class MITAKE
+{
+	public:
+		void writePoint(std::vector<uint8_t>& data, const Point& point);
+		void writePoints(std::vector<uint8_t>& data, const std::vector<Point>& points);
+		std::vector<uint8_t> getHash(const std::vector<uint8_t>& data);
+};

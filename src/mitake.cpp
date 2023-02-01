@@ -17,9 +17,30 @@
 #include "mitake.h"
 #include "picosha2.h"
 
-std::vector<uint8_t> getHash(const std::vector<uint8_t>& data)
+std::vector<uint8_t> MITAKE::getHash(const std::vector<uint8_t>& data)
 {
 	std::vector<uint8_t> hash(picosha2::k_digest_size);
 	picosha2::hash256(data, hash);
 	return hash;
+}
+
+void MITAKE::writePoint(std::vector<uint8_t>& data, const Point& point)
+{
+	std::vector<uint8_t> buf;
+	buf.emplace_back(point.tag);
+	buf.emplace_back(point.x);
+	buf.emplace_back(point.y);
+
+	for (uint32_t i = 0; i < buf.size(); ++i) {
+		data.insert(data.end(), buf[i]);
+	}
+}
+
+void MITAKE::writePoints(std::vector<uint8_t>& data, const std::vector<Point>& points)
+{
+	for (uint32_t i = 0; i < points.size(); ++i) {
+		data.emplace_back(points[i].tag);
+		data.emplace_back(points[i].x);
+		data.emplace_back(points[i].y);
+	}
 }
