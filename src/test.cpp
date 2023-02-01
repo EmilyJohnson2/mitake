@@ -6,7 +6,7 @@ int main(int argc, char* argv[])
 {
 	MITAKE mtk;
 	Header header;
-	Point p { 17341, 2233, 2414 };
+	Point p { 171, 2203, 114 };
 	std::vector<uint8_t> data;
 	std::vector<Point> points { 32, p };
 
@@ -14,7 +14,10 @@ int main(int argc, char* argv[])
 	std::vector<uint8_t> hash = mtk.getHash(data);
 	mtk.initHeader(header, points, hash);
 
-	std::cout << header.hash;
+	std::cout << sizeof(header.hash) << std::endl;
+	for (auto i = 0; i < hash.size(); ++i) {
+		std::cout << hash[i];
+	}
 
 	return 0;
 }

@@ -48,6 +48,6 @@ void MITAKE::initHeader(Header& header, const std::vector<Point>& points, const 
 	header.verson = VERSION;
 
 	for (uint32_t i = 0; i < 32; ++i) {
-		memcpy(header.hash, &hash[i], 1);
+		header.hash[i] = hash[i];
 	}
 }
