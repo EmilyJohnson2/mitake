@@ -16,12 +16,25 @@
 
 #include "mitake.h"
 #include "picosha2.h"
+#include <iostream>
 
 std::vector<uint8_t> Mitake::getHash(const std::vector<uint8_t>& data)
 {
 	std::vector<uint8_t> hash(picosha2::k_digest_size);
 	picosha2::hash256(data, hash);
 	return hash;
+}
+
+void Mitake::writeHeader(std::vector<uint8_t>& data, const Header& header)
+{
+	data.emplace_back(header.magic);
+	data.emplace_back(header.size);
+	data.emplace_back(header.tags);
+	data.emplace_back(header.verson);
+	
+	for (uint32_t i = 0; i < 32; ++i) {
+		data.emplace_back(header.hash[i]);
+	}
 }
 
 void Mitake::writePoint(std::vector<uint8_t>& data, const Point& point)
@@ -40,16 +53,20 @@ void Mitake::writePoints(std::vector<uint8_t>& data, const std::vector<Point>& p
 	}
 }
 
-void Mitake::initHeader(Header& header, const std::vector<Point>& points, std::vector<uint8_t>& hash)
+void Mitake::initHeader(Header& header, const std::vector<Point>& points, std::vector<uint8_t>& hash) 
 {
 	header.magic  = MAGIC;
 	header.size   = static_cast<uint32_t>(points.size() * sizeof(Point) + sizeof(Header));
 	header.tags   = static_cast<uint32_t>(points.size());
 	header.verson = VERSION;
 	*header.hash  = *reinterpret_cast<uint8_t*>(&hash);
-	/*
-		for (uint32_t i = 0; i < 32; ++i) {
-			header.hash[i] = hash[i];
-		}
-	*/
+}
+
+bool Mitake::checkHeader(const std::vector<uint8_t>& data)
+{
+	uint32_t magicBuf;
+	memcpy(&magicBuf, &data[0], 4);
+	std::cout << std::hex << magicBuf << std::endl;
+
+	return true;
 }
