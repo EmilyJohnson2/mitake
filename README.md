@@ -1,2 +1,2 @@
 # mitake
-## A simple implementation library for MTK format files storing two-dimensional point data.
+### A simple implementation library for MTK format files storing two-dimensional point data.
