@@ -16,7 +16,6 @@
 
 #include "mitake.h"
 #include "picosha2.h"
-#include <iostream>
 
 std::vector<uint8_t> Mitake::getHash(const std::vector<uint8_t>& data)
 {
@@ -64,9 +63,6 @@ void Mitake::initHeader(Header& header, const std::vector<Point>& points, std::v
 
 bool Mitake::checkHeader(const std::vector<uint8_t>& data)
 {
-	uint32_t magicBuf;
-	memcpy(&magicBuf, &data[0], 4);
-	std::cout << std::hex << magicBuf << std::endl;
 
 	return true;
 }
