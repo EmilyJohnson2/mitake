@@ -26,29 +26,26 @@ std::vector<uint8_t> Mitake::getHash(const std::vector<uint8_t>& data)
 
 void Mitake::writeHeader(std::vector<uint8_t>& data, const Header& header)
 {
-	data.emplace_back(header.magic);
-	data.emplace_back(header.size);
-	data.emplace_back(header.tags);
-	data.emplace_back(header.verson);
-	
-	for (uint32_t i = 0; i < 32; ++i) {
-		data.emplace_back(header.hash[i]);
-	}
+	memcpy(&data[0], &header.magic, sizeof(Header::hash));
+	memcpy(&data[4], &header.size, sizeof(Header::size));
+	memcpy(&data[8], &header.tags, sizeof(Header::tags));
+	memcpy(&data[12], &header.verson, sizeof(Header::verson));
+	memcpy(&data[16], header.hash, sizeof(Header::hash));
 }
 
 void Mitake::writePoint(std::vector<uint8_t>& data, const Point& point)
 {
-	data.emplace_back(point.tag);
-	data.emplace_back(point.x);
-	data.emplace_back(point.y);
+	memcpy(&data, &point.tag, sizeof(Point::tag));
+	memcpy(&data, &point.x, sizeof(Point::x));
+	memcpy(&data, &point.y, sizeof(Point::y));
 }
 
 void Mitake::writePoints(std::vector<uint8_t>& data, const std::vector<Point>& points)
 {
 	for (uint32_t i = 0; i < points.size(); ++i) {
-		data.emplace_back(points[i].tag);
-		data.emplace_back(points[i].x);
-		data.emplace_back(points[i].y);
+		memcpy(&data, &points[i].tag, sizeof(Point::tag));
+		memcpy(&data, &points[i].x, sizeof(Point::x));
+		memcpy(&data, &points[i].y, sizeof(Point::y));
 	}
 }
 
