@@ -24,48 +24,64 @@ std::vector<uint8_t> Mitake::getHash(const std::vector<uint8_t>& data)
 	return hash;
 }
 
-void Mitake::writeHeader(std::vector<uint8_t>& data, const Header& header)
+void Mitake::writeHeader(std::vector<uint8_t>& buffer, const Header& header)
 {
-	memcpy(data.data(), &header.magic, sizeof(Header::magic));
-	memcpy(data.data(), &header.size, sizeof(Header::size));
-	memcpy(data.data(), &header.tags, sizeof(Header::tags));
-	memcpy(data.data(), &header.verison, sizeof(Header::verison));
-	memcpy(data.data(), header.hash, sizeof(Header::hash));
+	buffer.resize(sizeof(Header));
+	memcpy(&buffer[0], &header, sizeof(Header));
 }
 
-void Mitake::writePoint(std::vector<uint8_t>& data, const Point& point)
+void Mitake::writePoint(std::vector<uint8_t>& buffer, const Point& point)
 {
-	memcpy(data.data(), &point.tag, sizeof(Point::tag));
-	memcpy(data.data(), &point.x, sizeof(Point::x));
-	memcpy(data.data(), &point.y, sizeof(Point::y));
+	std::vector<uint8_t> pointData(sizeof(Point));
+	memcpy(&pointData[0], &point, sizeof(Point));
+	buffer.insert(buffer.end(), pointData.begin(), pointData.end());
 }
 
-void Mitake::writePoints(std::vector<uint8_t>& data, const std::vector<Point>& points)
+void Mitake::writePoints(std::vector<uint8_t>& buffer, const std::vector<Point>& points)
 {
-	for (uint32_t i = 0; i < points.size(); ++i) {
-		memcpy(data.data(), &points[i].tag, sizeof(Point::tag));
-		memcpy(data.data(), &points[i].x, sizeof(Point::x));
-		memcpy(data.data(), &points[i].y, sizeof(Point::y));
+	for (const auto& point : points)
+	{
+		writePoint(buffer, point);
 	}
 }
 
-void Mitake::initHeader(Header& header, const std::vector<Point>& points, std::vector<uint8_t>& hash) 
+void Mitake::initHeader(Header& header, const std::vector<Point>& points, std::vector<uint8_t>& hash)
 {
-	header.magic   = MAGIC;
-	header.size    = static_cast<uint32_t>(points.size() * sizeof(Point) + sizeof(Header));
-	header.tags    = static_cast<uint32_t>(points.size());
+	header.magic = MAGIC;
+	header.size = sizeof(Header) + points.size() * sizeof(Point);
+	header.tags = points.size();
 	header.verison = VERSION;
-	*header.hash   = *reinterpret_cast<uint8_t*>(&hash);
+
+	std::vector<uint8_t> buffer;
+	writeHeader(buffer, header);
+	writePoints(buffer, points);
+	hash = getHash(buffer);
+	memcpy(header.hash, hash.data(), hash.size());
 }
 
 CheckErrors Mitake::checkHeader(const std::vector<uint8_t>& data)
 {
-	Header hBuf;
-	Point  pBuf;
+	Header headerBuffer;
 
-	memcpy(&hBuf, data.data(), sizeof(Header));
-	if (hBuf.magic != MAGIC) return IllegalMagic;
+	memcpy(&headerBuffer, data.data(), sizeof(Header));
+	if (headerBuffer.magic != MAGIC)
+		return IllegalMagic;
+	if (headerBuffer.size != data.size())
+		return IllegalSize;
+	if (headerBuffer.tags != (data.size() - sizeof(Header)) / sizeof(Point))
+		return IllegalTags;
+	if (headerBuffer.verison != VERSION)
+		return IllegalVerison;
 
+	std::vector<uint8_t> buffer(data.begin() + sizeof(Header), data.end());
+	std::vector<uint8_t> hash = getHash(buffer);
+	uint8_t hashBuffer[sizeof(Header::hash)];
+
+	memcpy(hashBuffer, &hash, sizeof(Header::hash));
+	for (auto i = 0; i < sizeof(Header::hash); ++i) {
+		if (headerBuffer.hash[i] != hashBuffer[i])
+			return IllegalHash;
+	}
 
 	return Ok;
 }

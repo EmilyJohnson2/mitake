@@ -29,7 +29,6 @@ enum CheckErrors
 	IllegalTags,
 	IllegalVerison,
 	IllegalHash,
-	IllegalTag,
 	Ok
 };
 
@@ -52,8 +51,8 @@ struct Point
 class Mitake
 {
 	public:
-		void writeHeader(std::vector<uint8_t>& data, const Header& header);
-		void writePoint(std::vector<uint8_t>& data, const Point& point);
+		void writeHeader(std::vector<uint8_t>& buffer, const Header& header);
+		void writePoint(std::vector<uint8_t>& buffer, const Point& point);
 		void writePoints(std::vector<uint8_t>& data, const std::vector<Point>& points);
 		std::vector<uint8_t> getHash(const std::vector<uint8_t>& data);
 		void initHeader(Header& header, const std::vector<Point>& points, std::vector<uint8_t>& hash);

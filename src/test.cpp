@@ -4,18 +4,24 @@
 
 int main(int argc, char* argv[])
 {
-	Mitake mtk;
+	Mitake mitake;
 	Header header;
-	Point p(44, 44, 44);
+	Point  point {1, 255, 255};
 	std::vector<uint8_t> data;
-	std::vector<Point> points(4, p);
+	std::vector<Point> points {8, point};
+	std::vector<uint8_t> hash;
 
-	std::vector<uint8_t> hash = mtk.getHash(data);
-	mtk.initHeader(header, points, hash);
-	mtk.writeHeader(data, header);
+	mitake.getHash(hash);
+	mitake.initHeader(header, points, hash);
+	mitake.writeHeader(data, header);
+	mitake.writePoints(data, points);
 
-	if (mtk.checkHeader(data) == Ok) {
+	if (mitake.checkHeader(data) == Ok) {
 		std::cout << "true" << std::endl;
+	}
+
+	for (auto i : header.hash) {
+		std::cout << i;
 	}
 
 	return 0;
