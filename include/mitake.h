@@ -22,12 +22,23 @@
 constexpr uint32_t MAGIC   = 0x4B544D7F; // 0x7F M T K
 constexpr uint32_t VERSION = 1;
 
+enum CheckErrors
+{
+	IllegalMagic,
+	IllegalSize,
+	IllegalTags,
+	IllegalVerison,
+	IllegalHash,
+	IllegalTag,
+	Ok
+};
+
 struct Header
 {
 	uint32_t magic;
 	uint32_t size;
 	uint32_t tags;
-	uint32_t verson;
+	uint32_t verison;
 	uint8_t  hash[32]; // SHA256
 };
 
@@ -46,5 +57,5 @@ class Mitake
 		void writePoints(std::vector<uint8_t>& data, const std::vector<Point>& points);
 		std::vector<uint8_t> getHash(const std::vector<uint8_t>& data);
 		void initHeader(Header& header, const std::vector<Point>& points, std::vector<uint8_t>& hash);
-		bool checkHeader(const std::vector<uint8_t>& data);
+		CheckErrors checkHeader(const std::vector<uint8_t>& data);
 };

@@ -14,7 +14,7 @@ int main(int argc, char* argv[])
 	mtk.initHeader(header, points, hash);
 	mtk.writeHeader(data, header);
 
-	if (mtk.checkHeader(data)) {
+	if (mtk.checkHeader(data) == Ok) {
 		std::cout << "true" << std::endl;
 	}
 
